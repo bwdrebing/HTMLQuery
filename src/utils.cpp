@@ -9,10 +9,12 @@ std::vector<std::string> ReadUrlsFromFile(const std::string& filePath)
 {
     std::ifstream infile(filePath);
     std::vector<std::string> urls;
-    std::string line;
-    while (std::getline(infile, line))
-    {
-        urls.push_back(line);
+    if (infile.is_open()) {
+        std::string line;
+        while (std::getline(infile, line))
+        {
+            urls.push_back(line);
+        }
     }
 
     return urls;
