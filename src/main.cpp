@@ -15,9 +15,10 @@ int main(int argc, const char** argv)
         "http://localhost:8000/3.html",
         "http://localhost:8000/4.html",
         "http://localhost:8000/5.html",
+        "http://localhost:8000/6.html",
     };
 
-    HtmlQueryEngine engine({&Predicates::IsNode});
+    HtmlQueryEngine engine({&Predicates::IsNode, &Predicates::IsDiv, &Predicates::IsLeaf});
     engine.processUrls(urlsToSearch,3);
     engine.output();
     return 0;
