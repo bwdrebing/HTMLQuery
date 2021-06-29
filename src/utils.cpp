@@ -1,8 +1,23 @@
 #include <mutex>
 #include <thread>
+#include <fstream>
 
 #include "utils.h"
-using namespace std;
+
+
+std::vector<std::string> ReadUrlsFromFile(const std::string& filePath)
+{
+    std::ifstream infile(filePath);
+    std::vector<std::string> urls;
+    std::string line;
+    while (std::getline(infile, line))
+    {
+        urls.push_back(line);
+    }
+
+    return urls;
+}
+
 
 namespace {
 
@@ -35,8 +50,8 @@ std::string MakeHttpRequest(const std::string& url) {
     return readBuffer;
 }
 
-static mutex s_mtx;
+static std::mutex s_mtx;
 void logger(const std::string& s) {
-    std::unique_lock<mutex> lk(s_mtx);
+    std::unique_lock<std::mutex> lk(s_mtx);
     std::cout << std::this_thread::get_id() << " - " << s << std::endl;
 }

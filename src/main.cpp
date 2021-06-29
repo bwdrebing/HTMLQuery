@@ -8,15 +8,16 @@
 using namespace std;
 int main(int argc, const char** argv)
 {
-   
-    std::vector<string> urlsToSearch{
-        "http://localhost:8000/1.html",
-        "http://localhost:8000/2.html",
-        "http://localhost:8000/3.html",
-        "http://localhost:8000/4.html",
-        "http://localhost:8000/5.html",
-        "http://localhost:8000/6.html",
-    };
+    if (argc != 3) {
+        std::cerr << "Incorrect number of arguments. 2 arguments expected." <<std::endl;
+        return 1;
+    }
+
+    std::string filePath = argv[1];
+    size_t numThreads = std::stoi(argv[2]);
+
+
+    std::vector<string> urlsToSearch = ReadUrlsFromFile(filePath);
 
     HtmlQueryEngine engine({&Predicates::IsNode, &Predicates::IsDiv, &Predicates::IsLeaf});
     engine.processUrls(urlsToSearch,3);
