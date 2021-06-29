@@ -1,39 +1,23 @@
 #include <iostream>
 #include <string>
-#include <curl/curl.h>
+#include <vector>
 
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
+#include "utils.h"
+#include "HtmlQueryEngine.h"
 
-std::string MakeHttpRequest(const std::string& url){
-    //Source: https://stackoverflow.com/questions/9786150/save-curl-content-result-into-a-string-in-c
-    CURL *curl;
-    CURLcode res;
-    std::string readBuffer;
-    
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        res = curl_easy_perform(curl);
-        if(res != CURLE_OK)
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                    curl_easy_strerror(res));
-        curl_easy_cleanup(curl);
-        
-    }
-    return readBuffer;
-}
-
-
+using namespace std;
 int main(int argc, const char** argv)
 {
    
-    std::string results = MakeHttpRequest("https://raw.githubusercontent.com/openfin/HelloOpenFin/master/public/app.json");
-    std::cout << results << std::endl;
+    std::vector<string> urlsToSearch{
+        "http://localhost:8000/1.html",
+        "http://localhost:8000/2.html",
+        "http://localhost:8000/3.html",
+        "http://localhost:8000/4.html",
+        "http://localhost:8000/5.html",
+    };
+
+    HtmlQueryEngine engine({&Predicates::IsNode});
+    engine.processUrls(urlsToSearch,3);
     return 0;
 }
