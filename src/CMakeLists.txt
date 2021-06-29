@@ -6,7 +6,8 @@ add_library(HTMLQuery_lib
   utils.h
   HtmlQueryEngine.cpp  HtmlQueryEngine.h 
   NodePredicates.cpp  NodePredicates.h
-  visitors/CountingVisitor.cpp  visitors/CountingVisitor.h  visitors/IGumboNodeVisitor.h
+   visitors/IGumboNodeVisitor.h visitors/IGumboNodeVisitor.cpp
+  visitors/CountingVisitor.cpp  visitors/CountingVisitor.h 
 )
 
 find_package(CURL CONFIG REQUIRED)

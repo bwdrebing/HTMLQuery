@@ -19,5 +19,6 @@ int main(int argc, const char** argv)
 
     HtmlQueryEngine engine({&Predicates::IsNode});
     engine.processUrls(urlsToSearch,3);
+    engine.output();
     return 0;
 }

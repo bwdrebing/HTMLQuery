@@ -1,8 +1,10 @@
 #include <future>
 #include <gumbo.h>
+#include <iomanip>
 
 #include "HtmlQueryEngine.h"
 #include "utils.h"
+#include "visitors/CountingVisitor.h"
 
 using namespace std;
 
@@ -20,6 +22,31 @@ void HtmlQueryEngine::processUrls(const std::vector<std::string> vecUrls, size_t
     std::vector<std::future<void>> futures;
     for (size_t i = 0; i < numThreads; i++) {
         futures.push_back(std::async(std::launch::async, &HtmlQueryEngine::threadProc, this, i));
+    }
+    {
+
+        std::unique_lock<mutex> lk(m_mtxMapAccess);
+        m_cv.wait(lk, [&]{
+            logger("Checking if done");
+            return m_mapOfResults.size() == m_urls.size();
+        });
+    }
+
+}
+
+void HtmlQueryEngine::output() const {
+    for (const auto& url : m_urls) {
+        std::cout << std::left << std::setw(40) << url;
+        auto results = m_mapOfResults.find(url);
+        if (results == m_mapOfResults.end()) {
+            cout << " ERROR, not found.";
+        }
+        else {
+            for (const auto& count : results->second) {
+                std::cout << std::right << std::setw(8) << count;
+            }
+        }
+        cout << std::endl;
     }
 }
 
@@ -44,9 +71,16 @@ void HtmlQueryEngine::threadProc(size_t id)
         }
 
         GumboOutput* output = gumbo_parse(urlContents.c_str());
-        //Do Something
+        CountingVisitor visitor(m_predicates);
+        visitor.iterate(output->root);
         gumbo_destroy_output(&kGumboDefaultOptions, output);
 
+        {
+            std::unique_lock<mutex> lk(m_mtxMapAccess);
+            m_mapOfResults[urlToProcess] = visitor.getResults();
+            logger("Signal work complete");
+        }
+        m_cv.notify_one();
     }
 }
 
