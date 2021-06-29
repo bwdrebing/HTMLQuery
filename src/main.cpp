@@ -14,7 +14,15 @@ int main(int argc, const char** argv)
     }
 
     std::string filePath = argv[1];
-    size_t numThreads = std::stoi(argv[2]);
+    
+    size_t numThreads = 0;
+    try {
+        numThreads = std::stoi(argv[2]);
+    }
+    catch (...) {
+        std::cerr << "Failed to parse second argument. It must be an integer." <<std::endl;
+        return 1;
+    }
 
 
     std::vector<string> urlsToSearch = ReadUrlsFromFile(filePath);
