@@ -54,13 +54,16 @@ std::string MakeHttpRequest(const std::string& url) {
 }
 
 void PrintQueryResults(const std::string& url, std::vector<size_t> results) {
-    std::cout << std::left << std::setw(60) << url;
+    std::cout << url << " ";
     if (results.empty()) {
         std::cout << " ERROR, not found.";
     }
     else {
-        for (const auto& count : results) {
-            std::cout << std::right << std::setw(10) << count;
+        for (size_t i = 0; i < results.size(); i++) {
+            std::cout << results[i];
+            if (i < results.size() - 1) {
+                std::cout << '\t';
+            }
         }
     }
     std::cout << std::endl;
