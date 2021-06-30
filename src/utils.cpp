@@ -54,6 +54,8 @@ std::string MakeHttpRequest(const std::string& url) {
 
 static std::mutex s_mtx;
 void logger(const std::string& s) {
-    std::unique_lock<std::mutex> lk(s_mtx);
-    std::cout << std::this_thread::get_id() << " - " << s << std::endl;
+    //Uncomment this for debugging help
+    
+    //std::unique_lock<std::mutex> lk(s_mtx);
+    //std::cout << std::this_thread::get_id() << " - " << s << std::endl;
 }

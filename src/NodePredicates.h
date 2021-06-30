@@ -8,4 +8,6 @@ namespace Predicates {
     bool IsNode(GumboNode* node);
     bool IsDiv(GumboNode* node);
     bool IsLeaf(GumboNode* node);
+    bool PrettyPrinter(GumboNode* node);
+
 }
