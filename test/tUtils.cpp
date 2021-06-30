@@ -4,7 +4,7 @@
 
 TEST(UtilsTest, ReadingUrlsFromFile) {
     auto urls = ReadUrlsFromFile("assets/ManyUrls.txt");
-    EXPECT_EQ(urls.size(), 7);
+    EXPECT_EQ(urls.size(), 4);
 }
 
 TEST(UtilsTest, BadFileNameReturnsNoUrls) {
