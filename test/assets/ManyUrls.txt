@@ -1,7 +1,4 @@
 https://en.cppreference.com/w/cpp/thread/mutex
 https://en.cppreference.com/w/cpp/thread/unique_lock
 https://en.cppreference.com/w/cpp/thread/condition_variable
-https://en.cppreference.com/w/cpp/thread/async
-https://en.cppreference.com/w/cpp/thread/future
-https://en.cppreference.com/w/cpp/thread/shared_future
 https://github.com/google/gumbo-parser
