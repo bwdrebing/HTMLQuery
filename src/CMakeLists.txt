@@ -10,6 +10,11 @@ add_library(HTMLQuery_lib
   visitors/CountingVisitor.cpp  visitors/CountingVisitor.h 
 )
 
+target_include_directories(
+  HTMLQuery_lib
+  PUBLIC
+  "${CMAKE_SOURCE_DIR}/src"
+)
 find_package(CURL CONFIG REQUIRED)
 find_package(gumbo)
 target_link_libraries(HTMLQuery_lib PRIVATE CURL::libcurl PUBLIC gumbo::gumbo)
