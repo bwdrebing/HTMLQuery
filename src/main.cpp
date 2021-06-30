@@ -27,8 +27,11 @@ int main(int argc, const char** argv)
 
     std::vector<string> urlsToSearch = ReadUrlsFromFile(filePath);
 
-    HtmlQueryEngine engine({&Predicates::IsNode, &Predicates::IsDiv, &Predicates::IsLeaf});
+    HtmlQueryEngine engine({&Predicates::IsNode, &Predicates::IsLeaf, &Predicates::IsDiv});
     engine.processUrls(urlsToSearch,1);
-    engine.output();
+    for (const auto& url : urlsToSearch) {
+        PrintQueryResults(url, engine.getResults(url));
+    }
+
     return 0;
 }

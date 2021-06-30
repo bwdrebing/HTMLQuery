@@ -1,6 +1,7 @@
 #include <mutex>
 #include <thread>
 #include <fstream>
+#include <iomanip>
 
 #include "utils.h"
 
@@ -50,6 +51,19 @@ std::string MakeHttpRequest(const std::string& url) {
 
     }
     return readBuffer;
+}
+
+void PrintQueryResults(const std::string& url, std::vector<size_t> results) {
+    std::cout << std::left << std::setw(40) << url;
+    if (results.empty()) {
+        std::cout << " ERROR, not found.";
+    }
+    else {
+        for (const auto& count : results) {
+            std::cout << std::right << std::setw(8) << count;
+        }
+    }
+    std::cout << std::endl;
 }
 
 static std::mutex s_mtx;

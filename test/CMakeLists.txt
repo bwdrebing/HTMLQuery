@@ -4,8 +4,10 @@ add_executable(HTMLQuery_test
   run_all_tests.cpp
   tUtils.cpp
   tCountingVisitor.cpp
+  tHtmlQueryEngine.cpp
   assets/ManyUrls.txt
   assets/EmptyFile.txt
+  assets/DuplicateUrls.txt
 )
 
 target_link_libraries(HTMLQuery_test PUBLIC

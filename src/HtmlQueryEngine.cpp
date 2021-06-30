@@ -34,19 +34,13 @@ void HtmlQueryEngine::processUrls(const std::vector<std::string> vecUrls, size_t
 
 }
 
-void HtmlQueryEngine::output() const {
-    for (const auto& url : m_urls) {
-        std::cout << std::left << std::setw(40) << url;
-        auto results = m_mapOfResults.find(url);
-        if (results == m_mapOfResults.end()) {
-            cout << " ERROR, not found.";
-        }
-        else {
-            for (const auto& count : results->second) {
-                std::cout << std::right << std::setw(8) << count;
-            }
-        }
-        cout << std::endl;
+std::vector<size_t> HtmlQueryEngine::getResults(const std::string& url) const {
+    auto results = m_mapOfResults.find(url);
+    if (results == m_mapOfResults.end()) {
+        return {};
+    }
+    else {
+        return results->second;
     }
 }
 

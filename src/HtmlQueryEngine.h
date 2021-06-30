@@ -11,7 +11,7 @@ class HtmlQueryEngine {
 public:
     HtmlQueryEngine(const std::vector<NodePredicate>& preds);
     void processUrls(const std::vector<std::string> vecUrls, size_t numThreads);
-    void output() const;
+    std::vector<size_t> getResults(const std::string& url) const;
 
 private:
 
