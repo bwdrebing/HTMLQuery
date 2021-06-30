@@ -27,8 +27,7 @@ void HtmlQueryEngine::processUrls(const std::vector<std::string> vecUrls, size_t
 
         std::unique_lock<mutex> lk(m_mtxMapAccess);
         m_cv.wait(lk, [&]{
-            logger("Checking if done");
-            return m_mapOfResults.size() == m_urls.size();
+            return allUrlsProcessed();
         });
     }
 
@@ -56,25 +55,44 @@ void HtmlQueryEngine::threadProc(size_t id)
             }
             urlToProcess = m_urlsLeftToProcess.front();
             m_urlsLeftToProcess.pop();
-        }
-        logger("Processing " + urlToProcess);
-        string urlContents = "";
-        {
-            std::unique_lock<mutex> lk(m_mtxNetworkAccess);
-            urlContents = MakeHttpRequest(urlToProcess);
+
         }
 
-        GumboOutput* output = gumbo_parse(urlContents.c_str());
-        CountingVisitor visitor(m_predicates);
-        visitor.iterate(output->root);
-        gumbo_destroy_output(&kGumboDefaultOptions, output);
+        logger("Processing " + urlToProcess);
+        
+        string htmlContent = "";
+        {
+            std::unique_lock<mutex> lk(m_mtxNetworkAccess);
+            htmlContent = MakeHttpRequest(urlToProcess);
+        }
+
+       auto results = queryHtml(htmlContent);
 
         {
             std::unique_lock<mutex> lk(m_mtxMapAccess);
-            m_mapOfResults[urlToProcess] = visitor.getResults();
+            m_mapOfResults[urlToProcess] = results;
             logger("Signal work complete");
         }
-        m_cv.notify_one();
     }
+    m_cv.notify_one();
+}
+
+bool HtmlQueryEngine::allUrlsProcessed() const {
+    //Make sure all urls have entries in the map of results
+    for (const auto& url : m_urls) {
+        if (m_mapOfResults.find(url) == m_mapOfResults.end()) {
+            logger("Cannot quit, " + url + " not yet processed.");
+            return false;
+        }
+    }
+    return true;
+}
+
+std::vector<size_t> HtmlQueryEngine::queryHtml(const std::string& content) const {
+    GumboOutput* output = gumbo_parse(content.c_str());
+    CountingVisitor visitor(m_predicates);
+    visitor.iterate(output->root);
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    return visitor.getResults();
 }
 

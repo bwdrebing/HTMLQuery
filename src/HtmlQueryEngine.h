@@ -16,6 +16,8 @@ public:
 private:
 
     void threadProc(size_t id);
+    std::vector<size_t> queryHtml(const std::string& content) const;
+    bool allUrlsProcessed() const;
 
     std::vector<NodePredicate> m_predicates;
     std::vector<std::string> m_urls;
